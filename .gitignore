@@ -1,0 +1,47 @@
+# Private credentials — NEVER commit these
+.env
+.webull.env
+conf/
+conf/token.txt
+
+# Private runtime data
+webull_portfolio_snapshot.json
+webull_order_status_snapshot.json
+webull_order_status.json
+webull_last_order_submission.json
+webull_trade_sdk.log
+
+# Private user data
+PORTFOLIO_STATE.md
+WEBULL_ORDER_STATUS.md
+MEMORY.md
+USER.md
+IDENTITY.md
+memory/
+
+# Runtime outputs — these contain actual trading data
+reports/
+research/logs/
+research/daily/
+research/weekly/
+research/evaluations/
+research/queue/
+
+# Agent internals
+openclaw-agent.sqlite*
+openclaw-workspace-state.json
+.openclaw-cli-images/
+.tmp_last_intraday_report.txt
+position_math_last.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+scripts/venv/
+scripts/__pycache__/
+
+# Editor
+.DS_Store
+*.swp
+.vscode/

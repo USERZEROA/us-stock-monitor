@@ -1,0 +1,248 @@
+{
+  "_comment": "Portable cron job definitions for the us-stock-monitor system. All jobs default to disabled=true. Enable only after credentials are configured and recoverability is verified. Replace YOUR_TELEGRAM_CHAT_ID and YOUR_OPENCLAW_ACCOUNT_ID with your actual values.",
+  "jobs": [
+    {
+      "name": "美股盘前机构级情报",
+      "role": "premarket_prediction",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 9 * * 1-5",
+        "tz": "America/New_York",
+        "description": "Weekdays at 09:00 ET (pre-market)"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role premarket_prediction"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 1500
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID"
+      }
+    },
+    {
+      "name": "美股盘后预测与操作复盘 每日16:20",
+      "role": "postmarket_audit",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "20 16 * * 1-5",
+        "tz": "America/New_York",
+        "description": "Weekdays at 16:20 ET (post-market)"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role postmarket_audit"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 1800
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    },
+    {
+      "name": "美股闭环健康巡检 每日17:05",
+      "role": "closed_loop_health",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "5 17 * * 1-5",
+        "tz": "America/New_York",
+        "description": "Weekdays at 17:05 ET (end-of-day health check)"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role closed_loop_health"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 20000,
+        "timeoutSeconds": 1200
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    },
+    {
+      "name": "美股学术与市场研究",
+      "role": "research_a",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "30 20 * * 1,3,5",
+        "tz": "America/New_York",
+        "description": "Monday, Wednesday, Friday at 20:30 ET"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role research_a"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 2100
+      },
+      "delivery": {
+        "mode": "none"
+      }
+    },
+    {
+      "name": "周度知识蒸馏与反证审计",
+      "role": "weekly_distillation_b",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 10 * * 6",
+        "tz": "America/New_York",
+        "description": "Saturday at 10:00 ET"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role weekly_distillation_b"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 3000
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    },
+    {
+      "name": "月度Prompt评测与受控优化",
+      "role": "monthly_prompt_eval_c",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 11 * * 0#1",
+        "tz": "America/New_York",
+        "description": "First Sunday of the month at 11:00 ET"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role monthly_prompt_eval_c"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 3900
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    },
+    {
+      "name": "每日Claude开放书籍学习与系统成长",
+      "role": "daily_book_learning_claude",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "0 3,6 * * *",
+        "tz": "America/New_York",
+        "description": "Daily at 03:00 and 06:00 ET (overnight research)"
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role daily_book_learning_claude"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 7800
+      },
+      "delivery": {
+        "mode": "none"
+      }
+    },
+    {
+      "name": "美股盘中高流动性扫描 每小时33分 [OPTIONAL/DISABLED]",
+      "role": "intraday_prediction_33",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "33 9-15 * * 1-5",
+        "tz": "America/New_York",
+        "description": "Weekdays at :33 minutes past each hour 09:00-15:00 ET. Disabled by default - high-frequency and costly."
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role intraday_prediction_33"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 1500
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    },
+    {
+      "name": "美股盘中高流动性扫描 每小时03分 [OPTIONAL/DISABLED]",
+      "role": "intraday_prediction_03",
+      "enabled_default": false,
+      "schedule": {
+        "kind": "cron",
+        "expr": "3 10-15 * * 1-5",
+        "tz": "America/New_York",
+        "description": "Weekdays at :03 minutes past each hour 10:00-15:00 ET. Disabled by default - high-frequency and costly."
+      },
+      "agentId": "us-market",
+      "sessionTarget": "isolated",
+      "wakeMode": "now",
+      "payload": {
+        "kind": "command",
+        "argv": ["sh", "-lc", "python3 scripts/us_market_cron_runner.py --role intraday_prediction_03"],
+        "cwd": "/YOUR/WORKSPACE/PATH/workspace-us-market",
+        "outputMaxBytes": 30000,
+        "timeoutSeconds": 1500
+      },
+      "delivery": {
+        "mode": "none",
+        "channel": "telegram",
+        "to": "YOUR_TELEGRAM_CHAT_ID",
+        "accountId": "YOUR_OPENCLAW_ACCOUNT_ID",
+        "bestEffort": true
+      }
+    }
+  ]
+}
